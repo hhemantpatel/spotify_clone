@@ -68,13 +68,36 @@
 
         </div>
         <div class="right scrollbar scroll">
-            <div id="controler">
+            <div id="controler" >
                 <h2 id="songName"></h2>
                 <p id="duration"></p>
-                <svg id="play_pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="44" height="44">
-                    <circle cx="12" cy="12" r="11" fill="white" fill-opacity="0.6" />
-                    <polygon points="9,7 17,12 9,17" fill="black" />
-                </svg>
+                <p id="currentduration"></p>
+
+                <div id="controlbutton">
+
+                    <svg id="prev" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">
+                        <circle cx="12" cy="12" r="11" fill="white" fill-opacity="0.6" />
+                        <polygon points="15,7 7,12 15,17" fill="black" />
+                    </svg>
+                    <svg id="play_pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="44" height="44">
+                        <circle cx="12" cy="12" r="11" fill="white" fill-opacity="0.6" />
+                        <!-- Play button triangle -->
+                        <polygon class="play-icon" points="9,7 17,12 9,17" fill="black" />
+                        <!-- Pause button rectangles -->
+                        <g class="pause-icon" fill="black" style="display: none;">
+                            <rect x="7" y="7" width="4" height="10" />
+                            <rect x="13" y="7" width="4" height="10" />
+                        </g>
+                    </svg>
+                    <svg id="next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">
+                        <circle cx="12" cy="12" r="11" fill="white" fill-opacity="0.6" />
+                        <polygon points="9,7 17,12 9,17" fill="black" />
+                    </svg>
+                </div>
+
+                <div id="timebar">
+                    <div id="circle"></div>
+                </div>
 
 
             </div>
