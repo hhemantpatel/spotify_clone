@@ -1,4 +1,27 @@
 // chatgpt code 
+let songPlaying=false;
+
+// document.addEventListener("click",function(e){
+//     if(e.target.closest("#play_pause")){
+//         songPlaying=false
+//     }
+// })
+
+function Time(duration) {
+    let d= document.getElementById("duration")
+    if(duration > 60){
+        t=duration/60
+        t=Math.trunc(t);
+    }
+    sec=duration%60
+    sec=Math.round(sec);
+    d.textContent=`${t}:${sec}`
+}
+
+function Name(songName){
+    let d= document.getElementById("songName")
+    d.textContent=songName
+}
 
 document.addEventListener("click", function(e) {
     if (e.target.closest(".playlistBox svg")) {
@@ -12,14 +35,19 @@ document.addEventListener("click", function(e) {
                 a.currentTime = 0;
             }
         });
-
+        let duration=audio.duration;
+        Time(duration)
+        let nam=playlistBox.querySelector(".songName")
+        Name(nam.textContent)
         // Play the clicked one
+        songPlaying=true
         audio.play();
     }
 });
 
+
 document.addEventListener("mouseover",function(e){
-    if (e.target.closest(".playlistBox")){
+    if (e.target.closest(".playlistBox")  && songPlaying==false){
         let playlistBox=e.target.closest(".playlistBox")
         let audio = playlistBox.querySelector("audio")
         document.querySelectorAll("audio").forEach(a=>{
@@ -35,7 +63,7 @@ document.addEventListener("mouseover",function(e){
 })
 
 document.addEventListener("mouseout",function(e){
-    if (e.target.closest(".playlistBox")){
+    if (e.target.closest(".playlistBox")  && songPlaying==false){
         let playlistBox=e.target.closest(".playlistBox")
         let audio = playlistBox.querySelector("audio")
 
