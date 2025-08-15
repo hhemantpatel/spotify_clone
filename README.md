@@ -54,7 +54,7 @@ Includes custom SVG icons for playback controls and UI elements.
 ---
 
 ## 🖼️ Screenshots
-*(Add screenshots here)*
+
 
 ---
 
