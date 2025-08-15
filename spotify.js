@@ -1,11 +1,11 @@
 // chatgpt code 
 let songPlaying=false;
 
-// document.addEventListener("click",function(e){
-//     if(e.target.closest("#play_pause")){
-//         songPlaying=false
-//     }
-// })
+document.addEventListener("click",function(e){
+    if(e.target.closest("#play_pause")){
+        songPlaying=false
+    }
+})
 
 function Time(duration) {
     let d= document.getElementById("duration")
