@@ -1,4 +1,3 @@
-
 // Global variables to track playback state and current audio element
 let songPlaying = false;
 let slink;
@@ -12,18 +11,11 @@ document.querySelector("#timebar").addEventListener("click", (e) => {
     }
 });
 
-
-
-
-
-
-
-
-// Handle play/pause button clicks to control music playback
+// Toggle play and pause when the play/pause button is clicked
+// Updates button appearance and controls playback
 document.addEventListener("click", function (e) {
     if (e.target.closest("#play_pause")) {
         const playPauseBtn = document.getElementById('play_pause');
-
         if (slink) {
             if (songPlaying) {
                 songPlaying = false;
@@ -38,26 +30,25 @@ document.addEventListener("click", function (e) {
     }
 })
 
-// Format and display song duration in MM:SS format
+// Display the total duration of the current song in MM:SS format
 function Time(duration) {
     let d = document.getElementById("duration");
     if (!duration) return;
-
     let minutes = Math.floor(duration / 60);
     let seconds = Math.floor(duration % 60);
-
-    // Format seconds to always show two digits
     seconds = seconds < 10 ? "0" + seconds : seconds;
-
     d.textContent = `${minutes}:${seconds}`;
 }
 
-// Update the song name display in the player
+// Update the displayed song name in the player controls
 function Name(songName) {
     let d = document.getElementById("songName")
     d.textContent = songName
 }
 
+// Handle clicking on a song in the playlist to play it
+// Ensures only one song plays at a time and updates UI
+// Also attaches a timeupdate listener to update progress bar and current time
 document.addEventListener("click", function (e) {
     if (e.target.closest(".playlistBox svg")) {
         let playlistBox = e.target.closest(".playlistBox");
@@ -95,58 +86,39 @@ document.addEventListener("click", function (e) {
             }
             updateCurrentDuration(audio);
         });
-        
         audio.play();
     }
 });
 
-
-// Preview songs when hovering over them in the playlist
+// Preview a song by playing it on mouseover (only if nothing is currently playing)
 document.addEventListener("mouseover", function (e) {
     if (e.target.closest(".playlistBox") && songPlaying == false) {
         let playlistBox = e.target.closest(".playlistBox")
         let audio = playlistBox.querySelector("audio")
-        // Only pause other songs, don't reset their time
+        // Pause all other songs except the one being previewed
         document.querySelectorAll("audio").forEach(a => {
             if (a !== audio) {
                 a.pause();
             }
         })
-
         audio.play()
-
     }
 })
-
+// Pause the previewed song on mouseout (if nothing is currently playing)
 document.addEventListener("mouseout", function (e) {
     if (e.target.closest(".playlistBox") && songPlaying == false) {
         let playlistBox = e.target.closest(".playlistBox")
         let audio = playlistBox.querySelector("audio")
-
         audio.pause()
-
     }
 })
 
-
-// my code
-
-// let svgButton = document.querySelector('svg[role="button"]');
-
-// svgButton.addEventListener("click", () => {
-//     console.log("SVG clicked!");
-// });
-
-
-// Fetch playlist data from the server and parse it
+// Fetch the list of playlists from the server and extract their names and links
 async function playlistData() {
-    let a = await fetch("http://127.0.0.1:3000/d:/New%20folder%20(2)/webD/song/");
+    let a = await fetch("/Song/");
     let text = await a.text();
-
-
     let div = document.createElement("div");
     div.innerHTML = text;
-
     let playlistNodelist = div.querySelectorAll("td a")
     let playlistName = [];
     let playlistlink = [];
@@ -157,60 +129,38 @@ async function playlistData() {
             playlistName.push(link.textContent)
         }
     }
-    console.log("what the hell")
     return [playlistName, playlistlink]
 }
-
-
-
-
-// Fetch songs for a specific playlist and parse them
+// Fetch the list of songs for a given playlist and extract their names and links
 async function songData(playlistlink) {
-    console.log(playlistlink)
     let a = await fetch(playlistlink);
     let text = await a.text();
-    // console.log(text)
     let div = document.createElement("div");
     div.innerHTML = text;
-
     let songName = [];
     let songlink = [];
     let songNode = div.querySelectorAll("td a")
-    console.log(songNode)
     for (let name of songNode) {
         if (name.textContent != "../") {
             let href = name.href
             songName.push(name.innerText)
             songlink.push(href)
         }
-
     }
-
     return [songName, songlink]
 }
 
-
-
-
-
-
-// Create a new playlist section in the UI
+// Create and insert a new playlist section into the UI
 function playlistCreate(name, num) {
     let right = document.getElementsByClassName("right")[0];
-
     let html = `<div class="fullSlot ${num}">
                 <h1>${name}</h1>
                 <div class="slot">
                 </div>
             </div>`
-
     right.insertAdjacentHTML("beforeend", html);
-
-
 }
-
-
-// Create a song box with play button and metadata in the UI
+// Create and insert a song box (with play button and metadata) into the UI
 function createBox(songName, audioLink, num) {
     let slot = document.querySelector(`.${num} .slot`);
     let html = `<div class="playlistBox pointer">
@@ -227,14 +177,9 @@ function createBox(songName, audioLink, num) {
                         <h2 class="songName">${songName}</h2>
                         <p class="artistName">Nahi pata</p>
                     </div>`
-
     slot.insertAdjacentHTML("beforeend", html);
-
-
-
 }
-
-// Handle time display updates
+// Update the current playback time display in MM:SS format
 function updateCurrentDuration(audio) {
     let d = document.getElementById("currentduration");
     if (!d || !audio) return;
@@ -243,22 +188,15 @@ function updateCurrentDuration(audio) {
     seconds = seconds < 10 ? "0" + seconds : seconds;
     d.textContent = `${minutes}:${seconds}`;
 }
-
-// Initialize the application and load all playlists and songs
+// Main function to initialize the app, load playlists, and populate the UI with songs
 async function main() {
-
     let [playlistName, playlistlink] = await playlistData();
-    console.log(playlistName)
-    console.log(playlistlink)
-
     for (let i = 0; i < playlistName.length; i++) {
         playlistCreate(playlistName[i], `p${i}`)
         let [songName, songlink] = await songData(playlistlink[i])
         for (let j = 0; j < songName.length; j++) {
             createBox(songName[j], songlink[j], `p${i}`)
-
         }
     }
 }
-
 main()
